@@ -15,9 +15,9 @@ class AppRoot extends StatelessWidget {
       title: "Finance Tracker",
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
-      home: const MainScreen(title: 'Fintrack'),
+      home: const MainScreen(title: 'FiTrack'),
     );
   }
 }
