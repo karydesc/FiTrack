@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:ui';
 
 import 'package:personalfinancetracker/models/Transaction.dart';
@@ -6,6 +7,7 @@ import 'package:personalfinancetracker/models/Transaction.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.title});
   final String title;
+
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -33,7 +35,7 @@ class TotalFundsWidget extends StatelessWidget {
             ),
           ),
           Text(
-            "$money\$",
+            "${money.toStringAsFixed(2)}\$",
             style: const TextStyle(
               fontSize: 64,
               fontWeight: FontWeight.bold,
@@ -59,18 +61,22 @@ class RecentTransactionsWidget extends StatelessWidget {
         color: const Color.fromARGB(96, 238, 238, 238),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: InkWell(child: Row(
         children: [
           const Text(":3"),
 
           const SizedBox(width: 12),
 
-          Text(transaction.text),
+          Text(transaction.text, style: TextStyle(fontSize: 16)),
 
           const Spacer(),
 
-          Text("\$${transaction.amount}"),
+          Text("\$${transaction.amount.toStringAsFixed(2)}", style: TextStyle(fontSize: 16)),
         ],
+      ),
+          onTap: () => {
+        //TODO: open transaction view
+          },
       ),
     );
   }
@@ -193,7 +199,6 @@ class _MainScreenState extends State<MainScreen> {
       imagePath: null,
     ),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,7 +213,7 @@ class _MainScreenState extends State<MainScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Theme.of(context).primaryColor, Colors.transparent],
+            colors: [Theme.of(context).primaryColor, Colors.white],
           ),
         ),
         child: Center(
@@ -237,16 +242,6 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: "Statistics",
-          ),
-        ],
       ),
     );
   }

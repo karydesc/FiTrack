@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personalfinancetracker/screens/RootView.dart';
 import 'screens/MainScreen.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class AppRoot extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
       ),
-      home: const MainScreen(title: 'FiTrack'),
+      home: RootView(),
     );
   }
 }
