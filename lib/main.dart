@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:personalfinancetracker/screens/RootView.dart';
-import 'screens/MainScreen.dart';
 
 void main() {
   runApp(const AppRoot());
