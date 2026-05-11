@@ -30,7 +30,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Center(
           child: Column(
             children: [
-              RecentTransactionsWidget(transactions: widget.transactions),
             ],
           ),
         ),

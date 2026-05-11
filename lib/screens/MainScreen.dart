@@ -9,9 +9,43 @@ class MainScreen extends StatefulWidget {
 
   const MainScreen({super.key, required this.transactions});
 
-  @override
+  void openTransactionOverlay(Transaction transaction, BuildContext context){
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return SizedBox(
+            height: 200,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        child: const Text('Close'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      ElevatedButton(
+                        child: const Icon(Icons.more_horiz),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  )
+
+                ],
+              ),
+            ),
+          );
+        }
+        );
+  }
+
+@override
   State<MainScreen> createState() => _MainScreenState();
 }
+
 
 class _MainScreenState extends State<MainScreen> {
   double money = 0;
@@ -45,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(height: 18),
-              RecentTransactionsWidget(transactions: widget.transactions),
+              RecentTransactionsWidget(transactions: widget.transactions, onItemTap: widget.openTransactionOverlay),
               Spacer(flex: 10),
             ],
           ),
