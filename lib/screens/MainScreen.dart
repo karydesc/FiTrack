@@ -9,19 +9,20 @@ class MainScreen extends StatefulWidget {
 
   const MainScreen({super.key, required this.transactions});
 
-  void openTransactionOverlay(Transaction transaction, BuildContext context){
+  void openTransactionOverlay(Transaction transaction, BuildContext context) {
     showModalBottomSheet<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return SizedBox(
-            height: 200,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 500,
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
                         child: const Text('Close'),
@@ -32,20 +33,19 @@ class MainScreen extends StatefulWidget {
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
-                  )
-
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
-          );
-        }
+          ),
         );
+      },
+    );
   }
 
-@override
+  @override
   State<MainScreen> createState() => _MainScreenState();
 }
-
 
 class _MainScreenState extends State<MainScreen> {
   double money = 0;
@@ -79,7 +79,10 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(height: 18),
-              RecentTransactionsWidget(transactions: widget.transactions, onItemTap: widget.openTransactionOverlay),
+              RecentTransactionsWidget(
+                transactions: widget.transactions,
+                onItemTap: widget.openTransactionOverlay,
+              ),
               Spacer(flex: 10),
             ],
           ),
