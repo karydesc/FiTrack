@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:personalfinancetracker/models/Transaction.dart';
+import 'package:personalfinancetracker/screens/AccountsScreen.dart';
 import 'package:personalfinancetracker/widgets/recent_transactions_widget.dart';
 import 'package:personalfinancetracker/widgets/total_funds_widget.dart';
 
 class MainScreen extends StatefulWidget {
-  final List<Transaction> transactions;
-
-  const MainScreen({super.key, required this.transactions});
+  final Function allTransactionsTap;
+  final Function addTransactionModal;
+  const MainScreen({
+    super.key,
+    required this.allTransactionsTap,
+    required this.addTransactionModal,
+  });
 
   void openTransactionOverlay(Transaction transaction, BuildContext context) {
     showModalBottomSheet<void>(
@@ -28,9 +33,40 @@ class MainScreen extends StatefulWidget {
                         child: const Text('Close'),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      ElevatedButton(
-                        child: const Icon(Icons.more_horiz),
-                        onPressed: () => Navigator.pop(context),
+                      PopupMenuButton(
+                        icon: Icon(Icons.more_horiz),
+                        onSelected: (String value) {
+                          if (value == 'edit') {
+                            // TODO: Open edit screen
+                          } else if (value == 'delete') {
+                            Navigator.pop(context);
+                          }
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<String>>[
+                              const PopupMenuItem<String>(
+                                value: 'edit',
+                                child: ListTile(
+                                  leading: Icon(Icons.edit),
+                                  title: Text('Edit'),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'delete',
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  title: Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
                       ),
                     ],
                   ),
@@ -49,8 +85,17 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   double money = 0;
+  // void sumTransactionCost() {
+  //   double sum = 0;
+  //   for (var transaction in widget.transactions) {
+  //     sum += transaction.amount;
+  //   }
+  //   money = sum;
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // sumTransactionCost();
     return Scaffold(
       appBar: AppBar(
         title: Text("FiTrack"),
@@ -72,7 +117,14 @@ class _MainScreenState extends State<MainScreen> {
               Spacer(flex: 1),
               TotalFundsWidget(money: money),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const AccountsScreen(),
+                    ),
+                  );
+                },
                 child: Text(
                   "Accounts",
                   style: TextStyle(color: Colors.white, fontSize: 18),
@@ -80,8 +132,9 @@ class _MainScreenState extends State<MainScreen> {
               ),
               const SizedBox(height: 18),
               RecentTransactionsWidget(
-                transactions: widget.transactions,
+                transactions: [],
                 onItemTap: widget.openTransactionOverlay,
+                goToHistory: widget.allTransactionsTap,
               ),
               Spacer(flex: 10),
             ],
@@ -90,9 +143,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            money++;
-          });
+          widget.addTransactionModal();
         },
         child: const Icon(Icons.add),
       ),
