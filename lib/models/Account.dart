@@ -1,6 +1,6 @@
-import 'dart:ffi';
+import 'package:hive/hive.dart';
 
-import 'package:flutter/foundation.dart';
+part 'Account.g.dart';
 
 @HiveType(typeId: 1)
 class Account {
@@ -9,7 +9,8 @@ class Account {
 
   @HiveField(1)
   final String id;
-  final Double balance;
+  @HiveField(2)
+  final double balance;
 
   Account({required this.name, required this.balance, required this.id});
 }
