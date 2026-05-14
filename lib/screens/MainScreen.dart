@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'package:personalfinancetracker/models/Transaction.dart';
 import 'package:personalfinancetracker/screens/AccountsScreen.dart';
@@ -92,9 +93,10 @@ class _MainScreenState extends State<MainScreen> {
   //   }
   //   money = sum;
   // }
-
+  final Box<Transaction> transactBox = Hive.box("transactionsBox");
   @override
   Widget build(BuildContext context) {
+    List<Transaction> transactions = transactBox.values.toList();
     // sumTransactionCost();
     return Scaffold(
       appBar: AppBar(
@@ -132,7 +134,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               const SizedBox(height: 18),
               RecentTransactionsWidget(
-                transactions: [],
+                transactions: transactions,
                 onItemTap: widget.openTransactionOverlay,
                 goToHistory: widget.allTransactionsTap,
               ),
