@@ -5,7 +5,7 @@ import "HistoryScreen.dart";
 import "MainScreen.dart";
 
 class RootView extends StatefulWidget {
-  RootView({super.key});
+  const RootView({super.key});
 
   @override
   State<RootView> createState() => _RootViewState();
