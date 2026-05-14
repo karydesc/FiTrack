@@ -6,7 +6,13 @@ import 'package:personalfinancetracker/widgets/list_item.dart';
 
 class TransactionsScreen extends StatefulWidget {
   final Function addTransactionModal;
-  const TransactionsScreen({super.key, required this.addTransactionModal});
+  final dynamic Function(Transaction, BuildContext) openTransactionDetailsModal;
+  const TransactionsScreen({
+    super.key,
+    required this.addTransactionModal,
+    required this.openTransactionDetailsModal,
+  });
+
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
@@ -18,74 +24,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   );
 
   String? selectedAccountID;
-
-  void openTransactionDetailsModal(
-    Transaction transaction,
-    BuildContext context,
-  ) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 500,
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        child: const Text('Close'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      PopupMenuButton(
-                        icon: const Icon(Icons.more_horiz),
-                        onSelected: (String value) {
-                          if (value == 'edit') {
-                            // TODO: Open edit screen
-                          } else if (value == 'delete') {
-                            Navigator.pop(context);
-                          }
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<String>>[
-                              const PopupMenuItem<String>(
-                                value: 'edit',
-                                child: ListTile(
-                                  leading: Icon(Icons.edit),
-                                  title: Text('Edit'),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              ),
-                              const PopupMenuItem<String>(
-                                value: 'delete',
-                                child: ListTile(
-                                  leading: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  title: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              ),
-                            ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +118,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             final transaction = accountTransactions[index];
                             return ListItem(
                               transaction: transaction,
-                              action: openTransactionDetailsModal,
+                              action: widget.openTransactionDetailsModal,
                             );
                           },
                         );

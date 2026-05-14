@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter/rendering.dart";
 import "package:hive/hive.dart";
 import "package:personalfinancetracker/models/Account.dart";
 import "package:personalfinancetracker/models/Transaction.dart";
@@ -135,7 +134,8 @@ class _RootViewState extends State<RootView> {
                             amount:
                                 double.tryParse(amountController.text) ?? 0.0,
                             type: transactionType,
-                            category: transactionCategory,
+                            category:
+                                "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}", //messy way to capitalize the value oops
                             date: DateTime.now(),
                             accountId: accountIDdest,
                           );
@@ -165,6 +165,75 @@ class _RootViewState extends State<RootView> {
     );
   }
 
+  void openTransactionDetailsModal(
+    Transaction transaction,
+    BuildContext context,
+  ) {
+    showModalBottomSheet<void>(
+      showDragHandle: true,
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 500,
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        child: const Text('Close'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      PopupMenuButton(
+                        icon: const Icon(Icons.more_horiz),
+                        onSelected: (String value) {
+                          if (value == 'edit') {
+                            // TODO: Open edit screen
+                          } else if (value == 'delete') {
+                            Navigator.pop(context);
+                          }
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<String>>[
+                              const PopupMenuItem<String>(
+                                value: 'edit',
+                                child: ListTile(
+                                  leading: Icon(Icons.edit),
+                                  title: Text('Edit'),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'delete',
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  title: Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final pages = [
@@ -176,7 +245,10 @@ class _RootViewState extends State<RootView> {
         },
         addTransactionModal: addTransactionModal,
       ),
-      TransactionsScreen(addTransactionModal: addTransactionModal),
+      TransactionsScreen(
+        addTransactionModal: addTransactionModal,
+        openTransactionDetailsModal: openTransactionDetailsModal,
+      ),
       StatisticsScreen(),
     ];
     return Scaffold(
