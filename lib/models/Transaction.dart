@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'Transaction.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 2)
 class Transaction {
   @HiveField(0)
   final String id;
@@ -28,6 +28,60 @@ class Transaction {
   @HiveField(7)
   final String accountId;
 
+  String getId(){
+    return id;
+  }
+
+  String? getImagePath(){
+    return imagePath;
+  }
+
+  DateTime getDate(){
+    return date;
+    }
+
+  String getText() {
+    return text;
+  }
+
+  double getAmount() {
+    return amount;
+  }
+
+  String getType() {
+    return type;
+  }
+
+  String getCategory() {
+    return category;
+  }
+
+  String getAccountId() {
+    return accountId;
+  }
+
+
+  void setAmount(double amount) {
+    amount = amount;
+  }
+
+  void setText(String text) {
+    text = text;
+  }
+
+  void setType(String type) {
+    type = type;
+  }
+
+  void setCategory(String category) {
+    category = category;
+  } 
+  
+  void setImagePath(String imagePath) {
+    imagePath = imagePath;
+  }
+
+  
   Transaction({
     required this.id,
     required this.text,

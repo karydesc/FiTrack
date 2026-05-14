@@ -18,7 +18,6 @@ class AccountAdapter extends TypeAdapter<Account> {
     };
     return Account(
       name: fields[0] as String,
-      balance: fields[2] as double,
       id: fields[1] as String,
     );
   }
@@ -26,13 +25,11 @@ class AccountAdapter extends TypeAdapter<Account> {
   @override
   void write(BinaryWriter writer, Account obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.id)
-      ..writeByte(2)
-      ..write(obj.balance);
+      ..write(obj.id);
   }
 
   @override

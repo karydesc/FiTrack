@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
 import "package:hive/hive.dart";
+import "package:hive_flutter/hive_flutter.dart";
 import "package:personalfinancetracker/models/Account.dart";
+
 import "package:personalfinancetracker/models/Transaction.dart";
 import "package:personalfinancetracker/screens/StatisticsScreen.dart";
+import "package:personalfinancetracker/services/HiveService.dart";
 import "TransactionsScreen.dart";
 import "MainScreen.dart";
 
@@ -16,15 +19,25 @@ class RootView extends StatefulWidget {
 class _RootViewState extends State<RootView> {
   int selectedPage = 0;
 
-  void addTransactionModal() {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController amountController = TextEditingController();
-    String transactionType = '';
-    String transactionCategory = '';
-    String accountIDdest = '';
+  
 
-    final transactionBox = Hive.box<Transaction>("transactionsBox");
-    final accountsBox = Hive.box<Account>("accountsBox");
+  void addOrEditTransactionModal(Transaction? transaction) {
+    if (HiveService().getAllAccounts().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("To add a transaction, you need to create an account."),
+        ),
+      );
+      return;
+    }
+    final TextEditingController nameController = TextEditingController(); //if we pass a transaction, we want to prefill the text fields with the transaction's data, otherwise they should be empty for a new transaction
+    final TextEditingController amountController = TextEditingController();
+    nameController.text = transaction?.text ?? '';
+    amountController.text = transaction?.amount.toString() ?? '';
+    String transactionType = transaction?.type ?? '';
+    String transactionCategory = transaction?.category ?? '';
+    String accountIDdest = transaction?.accountId ?? '';
+    DateTime date = transaction?.date ?? DateTime.now();
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -42,7 +55,7 @@ class _RootViewState extends State<RootView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                "New Transaction",
+                "Transaction",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
@@ -55,7 +68,6 @@ class _RootViewState extends State<RootView> {
                 controller: amountController,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(labelText: "Amount"),
-                maxLength: 5,
               ),
               const SizedBox(height: 16),
               Row(
@@ -63,6 +75,7 @@ class _RootViewState extends State<RootView> {
                 children: [
                   DropdownMenu(
                     onSelected: (value) => transactionType = value!,
+                    initialSelection: transactionType.isNotEmpty ? transactionType : null,
                     label: Text("Type"),
                     dropdownMenuEntries: [
                       DropdownMenuEntry(value: "incoming", label: "Incoming"),
@@ -72,17 +85,19 @@ class _RootViewState extends State<RootView> {
                   const SizedBox(width: 12),
                   DropdownMenu(
                     onSelected: (value) => transactionCategory = value!,
+                    initialSelection: transactionCategory.isNotEmpty ? transactionCategory : null,
                     label: Text("Category"),
                     width: 165,
                     dropdownMenuEntries: [
-                      DropdownMenuEntry(value: "income", label: "Income"),
-                      DropdownMenuEntry(value: "housing", label: "Housing"),
-                      DropdownMenuEntry(
-                        value: "transportation",
-                        label: "Transportation",
-                      ),
-                      DropdownMenuEntry(value: "lifestyle", label: "Lifestyle"),
-                      DropdownMenuEntry(value: "transfer", label: "Transfer"),
+                      DropdownMenuEntry(value: "food", label: "Food"),
+                      DropdownMenuEntry(value: "transport", label: "Transport"),
+                      DropdownMenuEntry(value: "entertainment", label: "Entertainment"),
+                      DropdownMenuEntry(value: "utilities", label: "Utilities"),
+                      DropdownMenuEntry(value: "health", label: "Health"),
+                      DropdownMenuEntry(value: "education", label: "Education"),
+                      DropdownMenuEntry(value: "shopping", label: "Shopping"),
+                      DropdownMenuEntry(value: "salary", label: "Salary"),
+                      DropdownMenuEntry(value: "investment", label: "Investment"),
                     ],
                   ),
                 ],
@@ -91,19 +106,20 @@ class _RootViewState extends State<RootView> {
 
               DropdownMenu(
                 onSelected: (value) => accountIDdest = value!,
+                initialSelection: accountIDdest.isNotEmpty ? accountIDdest : null,
                 label: Text("Account"),
-                dropdownMenuEntries: accountsBox.values
+                dropdownMenuEntries: HiveService().getAllAccounts()
                     .map((x) => DropdownMenuEntry(value: x.id, label: x.name))
                     .toList(),
               ),
 
               Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 18),
+                padding: const EdgeInsets.fromLTRB(14, 14, 14, 22),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       width: 90,
                       child: ElevatedButton(
                         onPressed: () {},
@@ -129,30 +145,21 @@ class _RootViewState extends State<RootView> {
                           }
 
                           Transaction tempTransaction = Transaction(
-                            id: DateTime.now().toString(),
+                            id: transaction?.id ?? DateTime.now().millisecondsSinceEpoch.toString(), 
                             text: nameController.text,
-                            amount:
-                                double.tryParse(amountController.text) ?? 0.0,
+                            amount: double.tryParse(amountController.text) ?? 0.0,
                             type: transactionType,
-                            category:
-                                "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}", //messy way to capitalize the value oops
-                            date: DateTime.now(),
+                            category: "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}",
+                            date: date,
                             accountId: accountIDdest,
-                          );
-
-                          transactionBox.put(
-                            tempTransaction.id,
-                            tempTransaction,
-                          );
+);
+                      
                           nameController.clear();
                           amountController.clear();
+                          HiveService().addTransaction(tempTransaction);
                           Navigator.pop(context);
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Text("Save Transaction"),
+                        child: Text("Save"),
                       ),
                     ),
                   ],
@@ -165,75 +172,7 @@ class _RootViewState extends State<RootView> {
     );
   }
 
-  void openTransactionDetailsModal(
-    Transaction transaction,
-    BuildContext context,
-  ) {
-    showModalBottomSheet<void>(
-      showDragHandle: true,
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 500,
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        child: const Text('Close'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      PopupMenuButton(
-                        icon: const Icon(Icons.more_horiz),
-                        onSelected: (String value) {
-                          if (value == 'edit') {
-                            // TODO: Open edit screen
-                          } else if (value == 'delete') {
-                            Navigator.pop(context);
-                          }
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<String>>[
-                              const PopupMenuItem<String>(
-                                value: 'edit',
-                                child: ListTile(
-                                  leading: Icon(Icons.edit),
-                                  title: Text('Edit'),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              ),
-                              const PopupMenuItem<String>(
-                                value: 'delete',
-                                child: ListTile(
-                                  leading: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  title: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                              ),
-                            ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     final pages = [
@@ -243,16 +182,25 @@ class _RootViewState extends State<RootView> {
             selectedPage = 1;
           });
         },
-        addTransactionModal: addTransactionModal,
+        addTransactionModal: addOrEditTransactionModal,
       ),
       TransactionsScreen(
-        addTransactionModal: addTransactionModal,
-        openTransactionDetailsModal: openTransactionDetailsModal,
+        addOrEditTransactionModal: addOrEditTransactionModal,
       ),
       StatisticsScreen(),
     ];
     return Scaffold(
-      body: pages[selectedPage],
+      body: ValueListenableBuilder(
+        valueListenable: Hive.box<Transaction>('transactionsBox').listenable(),
+        builder: (context, value, child) {
+          return ValueListenableBuilder(
+            valueListenable: Hive.box<Account>('accountsBox').listenable(),
+            builder: (context, value, child) {
+              return pages[selectedPage];
+            }
+          );
+        }
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) => {
           setState(() {

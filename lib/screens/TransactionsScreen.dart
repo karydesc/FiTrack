@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:personalfinancetracker/models/Account.dart';
 import 'package:personalfinancetracker/models/Transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:personalfinancetracker/screens/SingleTransactionScreen.dart';
 import 'package:personalfinancetracker/widgets/list_item.dart';
 
 class TransactionsScreen extends StatefulWidget {
-  final Function addTransactionModal;
-  final dynamic Function(Transaction, BuildContext) openTransactionDetailsModal;
+  final Function(Transaction?) addOrEditTransactionModal;
   const TransactionsScreen({
     super.key,
-    required this.addTransactionModal,
-    required this.openTransactionDetailsModal,
+    required this.addOrEditTransactionModal,
   });
 
   @override
@@ -118,7 +117,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             final transaction = accountTransactions[index];
                             return ListItem(
                               transaction: transaction,
-                              action: widget.openTransactionDetailsModal,
+                              action:
+                                  (
+                                    Transaction transaction,
+                                    BuildContext context,
+                                  ) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (context) =>
+                                            SingleTransactionScreen(
+                                              context: context,
+                                              transaction: transaction,
+                                              addOrEditTransactionModal:
+                                                  widget.addOrEditTransactionModal,
+                                            ),
+                                      ),
+                                    );
+                                  },
                             );
                           },
                         );
@@ -133,7 +149,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          widget.addTransactionModal();
+          widget.addOrEditTransactionModal(null);
         },
         child: Icon(Icons.add),
       ),
