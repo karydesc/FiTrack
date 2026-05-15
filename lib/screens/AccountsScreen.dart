@@ -308,7 +308,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       child: Icon(Icons.account_balance_wallet),
                     ),
                     title: Text(
-                      "No accounts created",
+                      account.name,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
