@@ -3,7 +3,6 @@ import 'package:FiTrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 class AccountsScreen extends StatefulWidget {
   const AccountsScreen({super.key});
 
@@ -56,6 +55,13 @@ class _AccountsScreenState extends State<AccountsScreen> {
                         ),
                       );
                       return;
+                    }
+                    if (HiveService().accountNameExists(newAccount.name)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Account name already exists."),
+                        ),
+                      );
                     }
                     HiveService().addAccount(newAccount);
 
@@ -215,7 +221,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                           id: DateTime.now().millisecondsSinceEpoch.toString(),
                           name: nameController.text,
                         );
-                        HiveService().addAccount(newAccount);
+                        HiveService().updateAccount(account.id, newAccount);
                         nameController.clear();
                         Navigator.pop(context);
                       },

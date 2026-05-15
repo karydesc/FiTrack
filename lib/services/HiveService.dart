@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 class HiveService {
   final Box<Account> _accountsBox = Hive.box<Account>('accountsBox');
   final Box<Transaction> _transactionsBox = Hive.box<Transaction>(
@@ -38,6 +37,14 @@ class HiveService {
 
   List<Account> getAllAccounts() {
     return _accountsBox.values.toList();
+  }
+
+  bool accountNameExists(String name) {
+    final String cleanName = name.trim().toLowerCase();
+
+    return _accountsBox.values.any((account) {
+      return account.name.trim().toLowerCase() == cleanName;
+    });
   }
 
   double getAccountBalance(Account account) {
@@ -84,7 +91,8 @@ class HiveService {
   Transaction? getTransaction(String id) {
     return _transactionsBox.get(id);
   }
-   String? getTransactionImage(Transaction transaction) {
+
+  String? getTransactionImage(Transaction transaction) {
     return transaction.imagePath;
   }
 }
