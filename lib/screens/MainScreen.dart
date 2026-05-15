@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:personalfinancetracker/models/Transaction.dart';
@@ -17,8 +16,6 @@ class MainScreen extends StatefulWidget {
     required this.allTransactionsTap,
     required this.addTransactionModal,
   });
-
-  
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -69,12 +66,20 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   const SizedBox(height: 18),
                   RecentTransactionsWidget(
-                    transactions: HiveService().getAllTransactions().reversed.toList(),
+                    transactions: HiveService()
+                        .getAllTransactions()
+                        .reversed
+                        .toList(),
                     onItemTap: (Transaction transaction, BuildContext context) {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (context) => SingleTransactionScreen(context: context, transaction: transaction, addOrEditTransactionModal: widget.addTransactionModal),
+                          builder: (context) => SingleTransactionScreen(
+                            context: context,
+                            transaction: transaction,
+                            addOrEditTransactionModal:
+                                widget.addTransactionModal,
+                          ),
                         ),
                       );
                     },
@@ -85,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           );
-        }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
