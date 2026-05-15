@@ -4,15 +4,8 @@ import "package:FiTrack/screens/StatisticsScreen.dart";
 import "package:FiTrack/screens/TransactionsScreen.dart";
 import "package:FiTrack/services/HiveService.dart";
 import "package:flutter/material.dart";
-<<<<<<< HEAD
-import "package:hive_flutter/hive_flutter.dart";
-=======
 import "package:flutter/services.dart";
-import "package:personalfinancetracker/models/Transaction.dart";
-import "package:personalfinancetracker/screens/StatisticsScreen.dart";
-import "package:personalfinancetracker/services/HiveService.dart";
-import "TransactionsScreen.dart";
->>>>>>> 5f72b963a5f89c205e98668b649adf676e183b79
+import "package:hive_flutter/hive_flutter.dart";
 import "MainScreen.dart";
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -67,7 +60,6 @@ class _RootViewState extends State<RootView> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-<<<<<<< HEAD
                   const Text(
                     "Transaction",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -145,23 +137,11 @@ class _RootViewState extends State<RootView> {
                           DropdownMenuEntry(value: "other", label: "Other"),
                         ],
                       ),
-=======
-                  DropdownMenu(
-                    onSelected: (value) => transactionType = value!,
-                    initialSelection: transactionType.isNotEmpty
-                        ? transactionType
-                        : null,
-                    label: Text("Type"),
-                    dropdownMenuEntries: [
-                      DropdownMenuEntry(value: "incoming", label: "Incoming"),
-                      DropdownMenuEntry(value: "outgoing", label: "Outgoing"),
->>>>>>> 5f72b963a5f89c205e98668b649adf676e183b79
                     ],
                   ),
                   const SizedBox(height: 14),
 
                   DropdownMenu(
-<<<<<<< HEAD
                     onSelected: (value) => accountIDdest = value!,
                     initialSelection: accountIDdest.isNotEmpty
                         ? accountIDdest
@@ -272,107 +252,6 @@ class _RootViewState extends State<RootView> {
               ),
             );
           },
-=======
-                    onSelected: (value) => transactionCategory = value!,
-                    initialSelection: transactionCategory.isNotEmpty
-                        ? transactionCategory
-                        : null,
-                    label: Text("Category"),
-                    width: 165,
-                    dropdownMenuEntries: [
-                      DropdownMenuEntry(value: "food", label: "Food"),
-                      DropdownMenuEntry(value: "transport", label: "Transport"),
-                      DropdownMenuEntry(
-                        value: "entertainment",
-                        label: "Entertainment",
-                      ),
-                      DropdownMenuEntry(value: "utilities", label: "Utilities"),
-                      DropdownMenuEntry(value: "health", label: "Health"),
-                      DropdownMenuEntry(value: "education", label: "Education"),
-                      DropdownMenuEntry(value: "shopping", label: "Shopping"),
-                      DropdownMenuEntry(value: "salary", label: "Salary"),
-                      DropdownMenuEntry(
-                        value: "investment",
-                        label: "Investment",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-
-              DropdownMenu(
-                onSelected: (value) => accountIDdest = value!,
-                initialSelection: accountIDdest.isNotEmpty
-                    ? accountIDdest
-                    : null,
-                label: Text("Account"),
-                dropdownMenuEntries: HiveService()
-                    .getAllAccounts()
-                    .map((x) => DropdownMenuEntry(value: x.id, label: x.name))
-                    .toList(),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 22),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: 60,
-                      width: 90,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Text("Image"),
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    SizedBox(
-                      height: 50,
-                      width: 200,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (accountIDdest.isEmpty ||
-                              transactionType.isEmpty ||
-                              transactionCategory.isEmpty ||
-                              nameController.text.isEmpty ||
-                              amountController.text.isEmpty) {
-                            return;
-                          }
-
-                          Transaction tempTransaction = Transaction(
-                            id:
-                                transaction?.id ??
-                                DateTime.now().millisecondsSinceEpoch
-                                    .toString(),
-                            text: nameController.text,
-                            amount:
-                                double.tryParse(amountController.text) ?? 0.0,
-                            type: transactionType,
-                            category:
-                                "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}",
-                            date: date,
-                            accountId: accountIDdest,
-                          );
-
-                          nameController.clear();
-                          amountController.clear();
-                          HiveService().addTransaction(tempTransaction);
-                          Navigator.pop(context);
-                        },
-                        child: Text("Save"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
->>>>>>> 5f72b963a5f89c205e98668b649adf676e183b79
         );
       },
     );

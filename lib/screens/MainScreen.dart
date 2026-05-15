@@ -3,7 +3,7 @@ import 'package:FiTrack/screens/AccountsScreen.dart';
 import 'package:FiTrack/screens/SingleTransactionScreen.dart';
 import 'package:FiTrack/services/HiveService.dart';
 import 'package:FiTrack/widgets/recent_transactions_widget.dart';
-import 'package:FiTrack/widgets/remaining_funds_widget.dart';
+import 'package:FiTrack/widgets/total_funds_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:FiTrack/models/Transaction.dart';
 import 'package:FiTrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
@@ -83,10 +85,11 @@ class SingleTransactionScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
+
                   children: [
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(32),
+                      padding: const EdgeInsets.fromLTRB(32, 24, 32, 24),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(24),
@@ -162,6 +165,25 @@ class SingleTransactionScreen extends StatelessWidget {
                             "Account ID",
                             liveTransaction.accountId,
                           ),
+                          if (liveTransaction.imagePath != null) ...[
+                            const SizedBox(height: 32),
+                            const Divider(),
+                            const SizedBox(height: 16),
+                            const Text(
+                              "Receipt Attached",
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                            ),
+                            const SizedBox(height: 12),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.file(
+                                File(liveTransaction.imagePath!),
+                                width: double.infinity,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),

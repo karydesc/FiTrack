@@ -1,14 +1,9 @@
-<<<<<<< HEAD
 import 'package:FiTrack/models/Account.dart';
 import 'package:FiTrack/models/Transaction.dart';
-import 'package:hive/hive.dart';
-
-=======
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:personalfinancetracker/models/Account.dart';
-import 'package:personalfinancetracker/models/Transaction.dart';
->>>>>>> 5f72b963a5f89c205e98668b649adf676e183b79
+
 
 class HiveService {
   final Box<Account> _accountsBox = Hive.box<Account>('accountsBox');
@@ -89,11 +84,7 @@ class HiveService {
   Transaction? getTransaction(String id) {
     return _transactionsBox.get(id);
   }
-<<<<<<< HEAD
-
-  String? getTransactionImage(Transaction transaction) {
+   String? getTransactionImage(Transaction transaction) {
     return transaction.imagePath;
   }
-=======
->>>>>>> 5f72b963a5f89c205e98668b649adf676e183b79
 }

@@ -1,16 +1,10 @@
 import 'package:FiTrack/models/Account.dart';
 import 'package:FiTrack/models/Transaction.dart';
 import 'package:FiTrack/screens/SingleTransactionScreen.dart';
+import 'package:FiTrack/services/HiveService.dart';
 import 'package:FiTrack/widgets/list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-<<<<<<< HEAD
-
-=======
-import 'package:personalfinancetracker/screens/SingleTransactionScreen.dart';
-import 'package:personalfinancetracker/services/HiveService.dart';
-import 'package:personalfinancetracker/widgets/list_item.dart';
->>>>>>> 5f72b963a5f89c205e98668b649adf676e183b79
 
 class TransactionsScreen extends StatefulWidget {
   final Function(Transaction?) addOrEditTransactionModal;
