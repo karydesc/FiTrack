@@ -3,6 +3,7 @@ import 'package:personalfinancetracker/models/Account.dart';
 import 'package:personalfinancetracker/models/Transaction.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personalfinancetracker/screens/SingleTransactionScreen.dart';
+import 'package:personalfinancetracker/services/HiveService.dart';
 import 'package:personalfinancetracker/widgets/list_item.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -17,18 +18,16 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  final Box<Account> accountsBox = Hive.box<Account>('accountsBox');
-  final Box<Transaction> transactionsBox = Hive.box<Transaction>(
-    'transactionsBox',
-  );
-
   String? selectedAccountID;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Transactions"),
+        title: const Text(
+          "Transactions",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         titleTextStyle: const TextStyle(fontSize: 30),
         centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,
@@ -44,13 +43,21 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
         ),
         child: ValueListenableBuilder(
-          valueListenable: accountsBox.listenable(),
+          valueListenable: HiveService().accountsListenable,
           builder: (context, Box<Account> accBox, _) {
             if (accBox.values.isEmpty) {
-              return const Center(
-                child: Text(
-                  "No accounts created",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(18),
+                    color: Color.fromARGB(114, 238, 238, 238),
+                  ),
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    "No accounts created",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               );
             }
@@ -112,7 +119,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   const SizedBox(height: 20),
                   Expanded(
                     child: ValueListenableBuilder(
-                      valueListenable: transactionsBox.listenable(),
+                      valueListenable: HiveService().transactionsListenable,
                       builder: (context, Box<Transaction> transactBox, _) {
                         final accountTransactions = transactBox.values
                             .where((t) => t.accountId == currentSelection)

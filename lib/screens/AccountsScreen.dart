@@ -251,8 +251,6 @@ class _AccountsScreenState extends State<AccountsScreen> {
     );
   }
 
-  final Box<Account> accountsBox = Hive.box<Account>('accountsBox');
-
   final TextEditingController nameController = TextEditingController();
 
   @override
@@ -260,7 +258,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Accounts"),
-        titleTextStyle: TextStyle(fontSize: 30),
+        titleTextStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,
       ),
@@ -276,13 +274,21 @@ class _AccountsScreenState extends State<AccountsScreen> {
           ),
         ),
         child: ValueListenableBuilder(
-          valueListenable: accountsBox.listenable(),
+          valueListenable: HiveService().accountsListenable,
           builder: (context, Box<Account> box, _) {
             if (box.values.isEmpty) {
-              return const Center(
-                child: Text(
-                  "No accounts created",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(18),
+                    color: Color.fromARGB(114, 238, 238, 238),
+                  ),
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    "No accounts created",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               );
             }

@@ -1,8 +1,5 @@
 import "package:flutter/material.dart";
-import "package:hive/hive.dart";
-import "package:hive_flutter/hive_flutter.dart";
-import "package:personalfinancetracker/models/Account.dart";
-
+import "package:flutter/services.dart";
 import "package:personalfinancetracker/models/Transaction.dart";
 import "package:personalfinancetracker/screens/StatisticsScreen.dart";
 import "package:personalfinancetracker/services/HiveService.dart";
@@ -19,8 +16,6 @@ class RootView extends StatefulWidget {
 class _RootViewState extends State<RootView> {
   int selectedPage = 0;
 
-  
-
   void addOrEditTransactionModal(Transaction? transaction) {
     if (HiveService().getAllAccounts().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -30,7 +25,8 @@ class _RootViewState extends State<RootView> {
       );
       return;
     }
-    final TextEditingController nameController = TextEditingController(); //if we pass a transaction, we want to prefill the text fields with the transaction's data, otherwise they should be empty for a new transaction
+    final TextEditingController nameController =
+        TextEditingController(); //if we pass a transaction, we want to prefill the text fields with the transaction's data, otherwise they should be empty for a new transaction
     final TextEditingController amountController = TextEditingController();
     nameController.text = transaction?.text ?? '';
     amountController.text = transaction?.amount.toString() ?? '';
@@ -75,7 +71,9 @@ class _RootViewState extends State<RootView> {
                 children: [
                   DropdownMenu(
                     onSelected: (value) => transactionType = value!,
-                    initialSelection: transactionType.isNotEmpty ? transactionType : null,
+                    initialSelection: transactionType.isNotEmpty
+                        ? transactionType
+                        : null,
                     label: Text("Type"),
                     dropdownMenuEntries: [
                       DropdownMenuEntry(value: "incoming", label: "Incoming"),
@@ -85,19 +83,27 @@ class _RootViewState extends State<RootView> {
                   const SizedBox(width: 12),
                   DropdownMenu(
                     onSelected: (value) => transactionCategory = value!,
-                    initialSelection: transactionCategory.isNotEmpty ? transactionCategory : null,
+                    initialSelection: transactionCategory.isNotEmpty
+                        ? transactionCategory
+                        : null,
                     label: Text("Category"),
                     width: 165,
                     dropdownMenuEntries: [
                       DropdownMenuEntry(value: "food", label: "Food"),
                       DropdownMenuEntry(value: "transport", label: "Transport"),
-                      DropdownMenuEntry(value: "entertainment", label: "Entertainment"),
+                      DropdownMenuEntry(
+                        value: "entertainment",
+                        label: "Entertainment",
+                      ),
                       DropdownMenuEntry(value: "utilities", label: "Utilities"),
                       DropdownMenuEntry(value: "health", label: "Health"),
                       DropdownMenuEntry(value: "education", label: "Education"),
                       DropdownMenuEntry(value: "shopping", label: "Shopping"),
                       DropdownMenuEntry(value: "salary", label: "Salary"),
-                      DropdownMenuEntry(value: "investment", label: "Investment"),
+                      DropdownMenuEntry(
+                        value: "investment",
+                        label: "Investment",
+                      ),
                     ],
                   ),
                 ],
@@ -106,9 +112,12 @@ class _RootViewState extends State<RootView> {
 
               DropdownMenu(
                 onSelected: (value) => accountIDdest = value!,
-                initialSelection: accountIDdest.isNotEmpty ? accountIDdest : null,
+                initialSelection: accountIDdest.isNotEmpty
+                    ? accountIDdest
+                    : null,
                 label: Text("Account"),
-                dropdownMenuEntries: HiveService().getAllAccounts()
+                dropdownMenuEntries: HiveService()
+                    .getAllAccounts()
                     .map((x) => DropdownMenuEntry(value: x.id, label: x.name))
                     .toList(),
               ),
@@ -145,15 +154,20 @@ class _RootViewState extends State<RootView> {
                           }
 
                           Transaction tempTransaction = Transaction(
-                            id: transaction?.id ?? DateTime.now().millisecondsSinceEpoch.toString(), 
+                            id:
+                                transaction?.id ??
+                                DateTime.now().millisecondsSinceEpoch
+                                    .toString(),
                             text: nameController.text,
-                            amount: double.tryParse(amountController.text) ?? 0.0,
+                            amount:
+                                double.tryParse(amountController.text) ?? 0.0,
                             type: transactionType,
-                            category: "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}",
+                            category:
+                                "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}",
                             date: date,
                             accountId: accountIDdest,
-);
-                      
+                          );
+
                           nameController.clear();
                           amountController.clear();
                           HiveService().addTransaction(tempTransaction);
@@ -172,9 +186,12 @@ class _RootViewState extends State<RootView> {
     );
   }
 
-  
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setApplicationSwitcherDescription(
+      ApplicationSwitcherDescription(label: "FiTrack"),
+    );
     final pages = [
       MainScreen(
         allTransactionsTap: () {
@@ -184,22 +201,20 @@ class _RootViewState extends State<RootView> {
         },
         addTransactionModal: addOrEditTransactionModal,
       ),
-      TransactionsScreen(
-        addOrEditTransactionModal: addOrEditTransactionModal,
-      ),
+      TransactionsScreen(addOrEditTransactionModal: addOrEditTransactionModal),
       StatisticsScreen(),
     ];
     return Scaffold(
       body: ValueListenableBuilder(
-        valueListenable: Hive.box<Transaction>('transactionsBox').listenable(),
+        valueListenable: HiveService().transactionsListenable,
         builder: (context, value, child) {
           return ValueListenableBuilder(
-            valueListenable: Hive.box<Account>('accountsBox').listenable(),
+            valueListenable: HiveService().accountsListenable,
             builder: (context, value, child) {
               return pages[selectedPage];
-            }
+            },
           );
-        }
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) => {
