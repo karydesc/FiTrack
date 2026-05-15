@@ -1,9 +1,9 @@
+import 'package:FiTrack/models/Account.dart';
+import 'package:FiTrack/models/Transaction.dart';
+import 'package:FiTrack/screens/RootView.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:personalfinancetracker/models/Account.dart';
-import 'package:personalfinancetracker/models/Transaction.dart';
-import 'package:personalfinancetracker/screens/RootView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,5 @@
+import 'package:FiTrack/models/Transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:personalfinancetracker/models/Transaction.dart';
-
 import 'list_item.dart';
 
 class RecentTransactionsWidget extends StatelessWidget {

@@ -1,6 +1,7 @@
+import 'package:FiTrack/models/Account.dart';
+import 'package:FiTrack/models/Transaction.dart';
 import 'package:hive/hive.dart';
-import 'package:personalfinancetracker/models/Account.dart';
-import 'package:personalfinancetracker/models/Transaction.dart';
+
 
 
 class HiveService {
@@ -72,7 +73,7 @@ class HiveService {
     return _transactionsBox.get(id);
   }
 
-
-
-  
+  String? getTransactionImage(Transaction transaction) {
+    return transaction.imagePath;
+  }
 }

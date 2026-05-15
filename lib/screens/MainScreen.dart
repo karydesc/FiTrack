@@ -1,13 +1,13 @@
+import 'package:FiTrack/models/Transaction.dart';
+import 'package:FiTrack/screens/AccountsScreen.dart';
+import 'package:FiTrack/screens/SingleTransactionScreen.dart';
+import 'package:FiTrack/services/HiveService.dart';
+import 'package:FiTrack/widgets/recent_transactions_widget.dart';
+import 'package:FiTrack/widgets/remaining_funds_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:personalfinancetracker/models/Transaction.dart';
-import 'package:personalfinancetracker/screens/AccountsScreen.dart';
-import 'package:personalfinancetracker/screens/SingleTransactionScreen.dart';
-import 'package:personalfinancetracker/services/HiveService.dart';
-import 'package:personalfinancetracker/widgets/recent_transactions_widget.dart';
-import 'package:personalfinancetracker/widgets/total_funds_widget.dart';
 
 class MainScreen extends StatefulWidget {
   final Function allTransactionsTap;

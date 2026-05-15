@@ -1,7 +1,8 @@
+import 'package:FiTrack/models/Transaction.dart';
+import 'package:FiTrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:personalfinancetracker/models/Transaction.dart';
-import 'package:personalfinancetracker/services/HiveService.dart';
+
 
 class SingleTransactionScreen extends StatelessWidget {
   final Transaction transaction;
