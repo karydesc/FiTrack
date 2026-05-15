@@ -5,7 +5,6 @@ import 'package:FiTrack/services/HiveService.dart';
 import 'package:FiTrack/widgets/recent_transactions_widget.dart';
 import 'package:FiTrack/widgets/remaining_funds_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 
@@ -18,8 +17,6 @@ class MainScreen extends StatefulWidget {
     required this.addTransactionModal,
   });
 
-  
-
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
@@ -30,13 +27,13 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("FiTrack"),
+        title: Text("FiTrack", style: TextStyle(fontWeight: FontWeight.bold)),
         titleTextStyle: TextStyle(fontSize: 30),
         centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ValueListenableBuilder(
-        valueListenable: Hive.box<Transaction>('transactionsBox').listenable(),
+        valueListenable: HiveService().transactionsListenable,
         builder: (context, Box<Transaction> box, child) {
           double currentMoney = HiveService().getTotalBalance();
 
@@ -53,28 +50,29 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Spacer(flex: 1),
                   TotalFundsWidget(money: currentMoney),
-                  TextButton(
+                  ElevatedButton(
+                    child: Text("Accounts", textAlign: TextAlign.center),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const AccountsScreen(),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AccountsScreen(),
                         ),
                       );
                     },
-                    child: Text(
-                      "Accounts",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
                   ),
                   const SizedBox(height: 18),
                   RecentTransactionsWidget(
-                    transactions: HiveService().getAllTransactions().reversed.toList(),
+                    transactions: HiveService().getAllTransactions().toList(),
                     onItemTap: (Transaction transaction, BuildContext context) {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (context) => SingleTransactionScreen(context: context, transaction: transaction, addOrEditTransactionModal: widget.addTransactionModal),
+                          builder: (context) => SingleTransactionScreen(
+                            context: context,
+                            transaction: transaction,
+                            addOrEditTransactionModal:
+                                widget.addTransactionModal,
+                          ),
                         ),
                       );
                     },
@@ -85,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           );
-        }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -17,7 +17,6 @@ class _AccountsScreenState extends State<AccountsScreen> {
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
@@ -40,10 +39,9 @@ class _AccountsScreenState extends State<AccountsScreen> {
                 controller: nameController,
                 decoration: const InputDecoration(labelText: "Name"),
               ),
-              
+
               const SizedBox(height: 24),
               SizedBox(
-
                 child: ElevatedButton(
                   onPressed: () {
                     final newAccount = Account(
@@ -60,15 +58,18 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       return;
                     }
                     HiveService().addAccount(newAccount);
-                
+
                     nameController.clear();
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            foregroundColor: Colors.white),
-                  child: const Text("Save", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    "Save",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -90,7 +91,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
       ),
       builder: (context) {
         return ValueListenableBuilder(
-          valueListenable: Hive.box<Account>('accountsBox').listenable(),
+          valueListenable: HiveService().accountsListenable,
           builder: (context, value, child) {
             return Padding(
               padding: EdgeInsets.only(
@@ -211,17 +212,14 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       ),
                       onPressed: () {
                         final newAccount = Account(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        name: nameController.text,
-                      );
-                      HiveService().addAccount(newAccount); 
-                      nameController.clear();
-                      Navigator.pop(context);
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          name: nameController.text,
+                        );
+                        HiveService().addAccount(newAccount);
+                        nameController.clear();
+                        Navigator.pop(context);
                       },
-                      child: const Text(
-                        "Save",
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      child: const Text("Save", style: TextStyle(fontSize: 16)),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -237,7 +235,10 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       },
                       child: const Text(
                         "Delete Account",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -245,13 +246,11 @@ class _AccountsScreenState extends State<AccountsScreen> {
                 ],
               ),
             );
-          }
+          },
         );
       },
     );
   }
-
-  final Box<Account> accountsBox = Hive.box<Account>('accountsBox');
 
   final TextEditingController nameController = TextEditingController();
 
@@ -259,30 +258,44 @@ class _AccountsScreenState extends State<AccountsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Accounts"),
+        title: Text("Accounts"),
+        titleTextStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
       ),
       body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 32),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Theme.of(context).primaryColor, Colors.white],
-            )
+        height: double.infinity,
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Theme.of(context).primaryColor, Colors.white],
           ),
+        ),
         child: ValueListenableBuilder(
-          valueListenable: accountsBox.listenable(),
+          valueListenable: HiveService().accountsListenable,
           builder: (context, Box<Account> box, _) {
             if (box.values.isEmpty) {
-              return const Center(child: Text("No accounts created"));
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(18),
+                    color: Color.fromARGB(114, 238, 238, 238),
+                  ),
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    "No accounts created",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              );
             }
-        
+
             final accounts = box.values.toList();
-        
+
             return ListView.builder(
               itemCount: accounts.length,
               shrinkWrap: true,
@@ -290,7 +303,10 @@ class _AccountsScreenState extends State<AccountsScreen> {
                 final account = accounts[index];
                 return Card(
                   color: Color.fromARGB(190, 238, 238, 238),
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: ListTile(
                     onTap: () {
                       showAccountDetailsModal(account);
@@ -300,11 +316,20 @@ class _AccountsScreenState extends State<AccountsScreen> {
                     ),
                     title: Text(
                       account.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     trailing: Text(
                       "\$${HiveService().getAccountBalance(account).toStringAsFixed(2)}",
-                      style: TextStyle(fontSize: 18, color:  HiveService().getAccountBalance(account) >= 0 ? const Color.fromARGB(255, 2, 138, 7) : const Color.fromARGB(255, 245, 72, 59), fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: HiveService().getAccountBalance(account) >= 0
+                            ? const Color.fromARGB(255, 2, 138, 7)
+                            : const Color.fromARGB(255, 245, 72, 59),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 );

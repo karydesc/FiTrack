@@ -17,7 +17,7 @@ class TotalFundsWidget extends StatelessWidget {
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Colors.white,
-              letterSpacing: 0.5,
+              letterSpacing: 0.1,
               height: 2,
             ),
           ),
