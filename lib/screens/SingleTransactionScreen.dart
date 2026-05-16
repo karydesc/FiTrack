@@ -5,7 +5,6 @@ import 'package:FiTrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 class SingleTransactionScreen extends StatelessWidget {
   final Transaction transaction;
   final Function(Transaction?) addOrEditTransactionModal;
@@ -25,7 +24,7 @@ class SingleTransactionScreen extends StatelessWidget {
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.more_horiz, color: Colors.white),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(28),
             onSelected: (String value) {
               if (value == 'edit') {
                 addOrEditTransactionModal(transaction);
@@ -85,14 +84,13 @@ class SingleTransactionScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
-
                   children: [
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(32, 24, 32, 24),
+                      padding: const EdgeInsets.fromLTRB(32, 24, 32, 18),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
                             color: const Color.fromARGB(68, 0, 0, 0),
@@ -171,11 +169,14 @@ class SingleTransactionScreen extends StatelessWidget {
                             const SizedBox(height: 16),
                             const Text(
                               "Receipt Attached",
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
                             ),
                             const SizedBox(height: 12),
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(18),
                               child: Image.file(
                                 File(liveTransaction.imagePath!),
                                 width: double.infinity,
@@ -204,7 +205,7 @@ class SingleTransactionScreen extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(18),
           ),
           child: Icon(icon, color: Colors.grey.shade600, size: 20),
         ),

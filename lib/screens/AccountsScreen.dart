@@ -63,10 +63,8 @@ class _AccountsScreenState extends State<AccountsScreen> {
                         ),
                       );
                       return;
-
                     }
                     HiveService().addAccount(newAccount);
-
                     nameController.clear();
                     Navigator.pop(context);
                   },
@@ -186,7 +184,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "\$${HiveService().getAccountBalance(account).toStringAsFixed(2)}",
+                                  "${HiveService().getAccountBalance(account).toStringAsFixed(2)}€",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -340,7 +338,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       ),
                     ),
                     trailing: Text(
-                      "\$${HiveService().getAccountBalance(account).toStringAsFixed(2)}",
+                      "${HiveService().getAccountBalance(account).toStringAsFixed(2)}€",
                       style: TextStyle(
                         fontSize: 18,
                         color: HiveService().getAccountBalance(account) >= 0

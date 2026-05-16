@@ -3,10 +3,9 @@ import 'package:FiTrack/screens/AccountsScreen.dart';
 import 'package:FiTrack/screens/SingleTransactionScreen.dart';
 import 'package:FiTrack/services/HiveService.dart';
 import 'package:FiTrack/widgets/recent_transactions_widget.dart';
-import 'package:FiTrack/widgets/total_funds_widget.dart';
+import 'package:FiTrack/widgets/total_balance_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 
 class MainScreen extends StatefulWidget {
   final Function allTransactionsTap;
@@ -49,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
               child: Column(
                 children: [
                   Spacer(flex: 1),
-                  TotalFundsWidget(money: currentMoney),
+                  TotalBalanceWidget(money: currentMoney),
                   ElevatedButton(
                     child: Text("Accounts", textAlign: TextAlign.center),
                     onPressed: () {

@@ -194,9 +194,9 @@ class _RootViewState extends State<RootView> {
                               foregroundColor: Colors.white,
                               padding: EdgeInsets.zero,
                             ),
-                            child: imagePath != null 
-                            ? const Icon(Icons.check_circle, size: 30)
-                            : const Text("Image"),
+                            child: imagePath != null
+                                ? const Icon(Icons.check_circle, size: 30)
+                                : const Text("Image"),
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -227,11 +227,17 @@ class _RootViewState extends State<RootView> {
                                         .toString(),
                                 text: nameController.text,
                                 amount:
-                                    double.tryParse(amountController.text) ??
+                                    double.tryParse(
+                                      amountController.text.replaceAll(
+                                        //on iOS keyboard only shows comma, but parsing only sees dots
+                                        ',',
+                                        ".",
+                                      ),
+                                    ) ??
                                     0.0,
                                 type: transactionType,
                                 category:
-                                    "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}",
+                                    "${transactionCategory[0].toUpperCase()}${transactionCategory.substring(1)}", //.capitalize() equivalent
                                 date: date,
                                 accountId: accountIDdest,
                                 imagePath: imagePath,
