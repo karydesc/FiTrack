@@ -41,6 +41,8 @@ class _AccountsScreenState extends State<AccountsScreen> {
 
               const SizedBox(height: 24),
               SizedBox(
+                height: 50,
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     final newAccount = Account(
@@ -109,14 +111,6 @@ class _AccountsScreenState extends State<AccountsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
                   const SizedBox(height: 16),
                   const Text(
                     "Account Details",

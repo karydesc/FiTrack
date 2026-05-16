@@ -26,7 +26,7 @@ class ListItem extends StatelessWidget {
         ),
 
         subtitle: Text(
-          'in Account: ${HiveService().getAccount(transaction.accountId)!.name}',
+          'Account: ${HiveService().getAccount(transaction.accountId)!.name}',
         ),
 
         trailing: Text(

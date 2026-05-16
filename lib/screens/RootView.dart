@@ -294,6 +294,7 @@ class _RootViewState extends State<RootView> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Theme.of(context).primaryColor,
         onTap: (index) => {
           setState(() {
             selectedPage = index;
