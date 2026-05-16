@@ -28,6 +28,7 @@ class HiveService {
   }
 
   void updateAccount(String id, Account account) {
+    _accountsBox.delete(id);
     _accountsBox.put(id, account);
   }
 

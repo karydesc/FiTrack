@@ -62,6 +62,8 @@ class _AccountsScreenState extends State<AccountsScreen> {
                           content: Text("Account name already exists."),
                         ),
                       );
+                      return;
+
                     }
                     HiveService().addAccount(newAccount);
 
@@ -218,9 +220,19 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       ),
                       onPressed: () {
                         final newAccount = Account(
-                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          id: account.id,
                           name: nameController.text,
                         );
+                        if (HiveService().accountNameExists(newAccount.name) &&
+                            newAccount.name.trim().toLowerCase() !=
+                                account.name.trim().toLowerCase()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Account name already exists."),
+                            ),
+                          );
+                          return;
+                        }
                         HiveService().updateAccount(account.id, newAccount);
                         nameController.clear();
                         Navigator.pop(context);
