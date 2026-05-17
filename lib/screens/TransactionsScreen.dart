@@ -19,10 +19,11 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   String? selectedAccountID;
+  String selectedTypeFilter = "all";
   bool dateFilterEnabled = false;
+  DateTimeRange? selectedDateRange;
   bool sortEnable = false;
   bool sortAscending = false;
-  DateTimeRange? selectedDateRange;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(18),
-                    color: Colors.white,
+                    color: const Color.fromARGB(114, 238, 238, 238),
                   ),
                   padding: const EdgeInsets.all(24),
                   child: const Text(
@@ -83,76 +84,123 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 children: [
                   accountSelector(currentSelection, accBox),
                   const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FilterChip(
-                        label: Text(
-                          selectedDateRange == null
-                              ? "Date Filter"
-                              : "${selectedDateRange!.start.day}/${selectedDateRange!.start.month} - ${selectedDateRange!.end.day}/${selectedDateRange!.end.month}",
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        selected: dateFilterEnabled,
-                        backgroundColor: Colors.white,
-                        selectedColor: Colors.white,
-                        showCheckmark: true,
-                        onSelected: (bool selected) async {
-                          if (selected) {
-                            final dateRange = await showDateRangePicker(
-                              context: context,
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
-                            if (dateRange != null) {
-                              setState(() {
-                                selectedDateRange = dateRange;
-                                dateFilterEnabled = true;
-                              });
-                            }
-                          } else {
+
+                  // Added horizontal scrolling here so the chips don't overflow!
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        PopupMenuButton<String>(
+                          initialValue: selectedTypeFilter,
+                          onSelected: (String value) {
                             setState(() {
-                              dateFilterEnabled = false;
-                              selectedDateRange = null;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 12),
-                      FilterChip(
-                        label: const Text(
-                          "Sort",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        selected: sortEnable,
-                        backgroundColor: Colors.white,
-                        selectedColor: Colors.white,
-                        showCheckmark: true,
-                        onSelected: (bool selected) {
-                          setState(() => sortEnable = selected);
-                        },
-                      ),
-                      if (sortEnable)
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              sortAscending = !sortAscending;
+                              selectedTypeFilter = value;
                             });
                           },
-                          icon: Icon(
-                            sortAscending
-                                ? Icons.arrow_upward
-                                : Icons.arrow_downward,
-                            color: Colors.grey[800],
-                            size: 22,
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                                const PopupMenuItem<String>(
+                                  value: 'all',
+                                  child: Text('All Types'),
+                                ),
+                                const PopupMenuItem<String>(
+                                  value: 'incoming',
+                                  child: Text('Incoming'),
+                                ),
+                                const PopupMenuItem<String>(
+                                  value: 'outgoing',
+                                  child: Text('Outgoing'),
+                                ),
+                              ],
+                          child: Chip(
+                            label: Text(
+                              selectedTypeFilter == "all"
+                                  ? "All Types"
+                                  : (selectedTypeFilter == "incoming"
+                                        ? "Incoming"
+                                        : "Outgoing"),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            avatar: const Icon(Icons.filter_list, size: 18),
+                            side: BorderSide.none,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
-                    ],
+                        const SizedBox(width: 8),
+                        FilterChip(
+                          label: Text(
+                            selectedDateRange == null
+                                ? "Date Filter"
+                                : "${selectedDateRange!.start.day}/${selectedDateRange!.start.month} - ${selectedDateRange!.end.day}/${selectedDateRange!.end.month}",
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          selected: dateFilterEnabled,
+                          backgroundColor: Colors.white,
+                          selectedColor: Colors.white,
+                          showCheckmark: true,
+                          onSelected: (bool selected) async {
+                            if (selected) {
+                              final dateRange = await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                              );
+                              if (dateRange != null) {
+                                setState(() {
+                                  selectedDateRange = dateRange;
+                                  dateFilterEnabled = true;
+                                });
+                              }
+                            } else {
+                              setState(() {
+                                dateFilterEnabled = false;
+                                selectedDateRange = null;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        FilterChip(
+                          label: const Text(
+                            "Sort by Date",
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          selected: sortEnable,
+                          backgroundColor: Colors.white,
+                          selectedColor: Colors.white,
+                          showCheckmark: true,
+                          onSelected: (bool selected) {
+                            setState(() => sortEnable = selected);
+                          },
+                        ),
+                        if (sortEnable)
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                sortAscending = !sortAscending;
+                              });
+                            },
+                            icon: Icon(
+                              sortAscending
+                                  ? Icons.arrow_upward
+                                  : Icons.arrow_downward,
+                              color: Colors.grey[800],
+                              size: 22,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   transactions_list(
                     currentSelection: currentSelection,
                     widget: widget,
+                    selectedTypeFilter: selectedTypeFilter,
                     selectedDateRange: dateFilterEnabled
                         ? selectedDateRange
                         : null,
@@ -225,6 +273,7 @@ class transactions_list extends StatelessWidget {
     super.key,
     required this.currentSelection,
     required this.widget,
+    required this.selectedTypeFilter,
     required this.selectedDateRange,
     required this.sortEnable,
     required this.sortAscending,
@@ -232,6 +281,7 @@ class transactions_list extends StatelessWidget {
 
   final String currentSelection;
   final TransactionsScreen widget;
+  final String selectedTypeFilter;
   final DateTimeRange? selectedDateRange;
   final bool sortEnable;
   final bool sortAscending;
@@ -244,6 +294,9 @@ class transactions_list extends StatelessWidget {
         builder: (context, Box<Transaction> transactBox, _) {
           List<Transaction> accountTransactions = transactBox.values.where((t) {
             if (currentSelection != "all" && t.accountId != currentSelection) {
+              return false;
+            }
+            if (selectedTypeFilter != "all" && t.type != selectedTypeFilter) {
               return false;
             }
             if (selectedDateRange != null) {

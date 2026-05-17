@@ -66,8 +66,12 @@ class HiveService {
   double getTotalBalance() {
     double totalBalance = 0;
 
-    for (var account in _accountsBox.values) {
-      totalBalance += getAccountBalance(account);
+    for (var transaction in _transactionsBox.values) {
+      if (transaction.type == 'outgoing') {
+        totalBalance -= transaction.amount;
+      } else {
+        totalBalance += transaction.amount;
+      }
     }
 
     return totalBalance;
@@ -95,5 +99,78 @@ class HiveService {
 
   String? getTransactionImage(Transaction transaction) {
     return transaction.imagePath;
+  }
+
+  Map<String, double> getTotalSpendingByCategory() {
+    Map<String, double> categorySpendings = {};
+
+    for (var transaction in _transactionsBox.values) {
+      if (transaction.type == 'outgoing') {
+        categorySpendings[transaction.category] =
+            categorySpendings[transaction.category] ?? 0 + transaction.amount;
+      }
+    }
+
+    return categorySpendings;
+  }
+
+  Map<String, double> getSpendingByAccount() {
+    Map<String, double> spendingMap = {};
+
+    for (var transaction in _transactionsBox.values) {
+      if (transaction.type == 'outgoing') {
+        spendingMap[transaction.accountId] =
+            (spendingMap[transaction.accountId] ?? 0) + transaction.amount;
+      }
+    }
+
+    return spendingMap;
+  }
+
+  double getBalanceUptoDate(DateTime date, Account account) {
+    double balance = 0;
+    for (var transaction in _transactionsBox.values) {
+      if ((transaction.date.isBefore(date) ||
+              transaction.date.isAtSameMomentAs(date)) &&
+          transaction.accountId == account.id) {
+        if (transaction.type == 'outgoing') {
+          balance -= transaction.amount;
+        } else {
+          balance += transaction.amount;
+        }
+      }
+    }
+    return balance;
+  }
+
+  Map<DateTime, double> getAccountSpendingInRange(
+    Account account,
+    DateTime start,
+    DateTime end,
+    double startingBalance,
+  ) {
+    double balance = startingBalance;
+    Map<DateTime, double> spendingMap = {};
+
+    final sortedTransactions =
+        _transactionsBox.values
+            .where(
+              (transaction) =>
+                  transaction.accountId == account.id &&
+                  transaction.date.isAfter(start) &&
+                  transaction.date.isBefore(end),
+            )
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
+
+    for (var transaction in sortedTransactions) {
+      if (transaction.type == 'outgoing') {
+        balance -= transaction.amount;
+      } else {
+        balance += transaction.amount;
+      }
+      spendingMap[transaction.date] = balance;
+    }
+    return spendingMap;
   }
 }
