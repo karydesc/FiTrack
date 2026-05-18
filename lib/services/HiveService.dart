@@ -48,11 +48,11 @@ class HiveService {
     });
   }
 
-  double getAccountBalance(Account account) {
+  double getAccountBalance(String id) {
     double balance = 0;
 
     for (var transaction in _transactionsBox.values) {
-      if (transaction.accountId == account.id) {
+      if (transaction.accountId == id) {
         if (transaction.type == 'outgoing') {
           balance -= transaction.amount;
         } else {
@@ -127,12 +127,12 @@ class HiveService {
     return spendingMap;
   }
 
-  double getBalanceUptoDate(DateTime date, Account account) {
+  double getBalanceUptoDate(DateTime date, String id) {
     double balance = 0;
     for (var transaction in _transactionsBox.values) {
       if ((transaction.date.isBefore(date) ||
               transaction.date.isAtSameMomentAs(date)) &&
-          transaction.accountId == account.id) {
+          transaction.accountId == id) {
         if (transaction.type == 'outgoing') {
           balance -= transaction.amount;
         } else {
@@ -144,7 +144,7 @@ class HiveService {
   }
 
   Map<DateTime, double> getAccountSpendingInRange(
-    Account account,
+    String id,
     DateTime start,
     DateTime end,
     double startingBalance,
@@ -156,7 +156,7 @@ class HiveService {
         _transactionsBox.values
             .where(
               (transaction) =>
-                  transaction.accountId == account.id &&
+                  transaction.accountId == id &&
                   transaction.date.isAfter(start) &&
                   transaction.date.isBefore(end),
             )

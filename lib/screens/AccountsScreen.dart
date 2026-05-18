@@ -178,7 +178,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "${HiveService().getAccountBalance(account).toStringAsFixed(2)}€",
+                                  "${HiveService().getAccountBalance(account.id).toStringAsFixed(2)}€",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -332,10 +332,10 @@ class _AccountsScreenState extends State<AccountsScreen> {
                       ),
                     ),
                     trailing: Text(
-                      "${HiveService().getAccountBalance(account).toStringAsFixed(2)}€",
+                      "${HiveService().getAccountBalance(account.id).toStringAsFixed(2)}€",
                       style: TextStyle(
                         fontSize: 18,
-                        color: HiveService().getAccountBalance(account) >= 0
+                        color: HiveService().getAccountBalance(account.id) >= 0
                             ? const Color.fromARGB(255, 2, 138, 7)
                             : const Color.fromARGB(255, 245, 72, 59),
                         fontWeight: FontWeight.bold,

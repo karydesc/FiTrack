@@ -1,3 +1,3 @@
-# personalfinancetracker
+# FiTrack
 
-A new Flutter project.
+A Flutter project.

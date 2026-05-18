@@ -1,17 +1,18 @@
-import 'package:FiTrack/screens/StatisticsScreen.dart';
 import 'package:FiTrack/services/HiveService.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class pie_chart_widget extends StatelessWidget {
-  const pie_chart_widget({super.key});
+Map<String, double> accountSpendings = HiveService().getSpendingByAccount();
+
+class pie_chart_widget_account extends StatelessWidget {
+  const pie_chart_widget_account({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         SizedBox(
-          height: 190,
+          height: 210,
           width: 190,
           child: PieChart(PieChartData(sections: buildSections().toList())),
         ),
@@ -21,15 +22,18 @@ class pie_chart_widget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Total Spending",
+              "Accounts",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
             ),
+
             const SizedBox(height: 8),
-            ...categoryColors.entries.map((entry) {
+
+            ...accountSpendings.entries.map((entry) {
+              int colorindex = 0;
               return Padding(
                 padding: const EdgeInsets.only(bottom: 6.0),
                 child: Row(
@@ -38,13 +42,16 @@ class pie_chart_widget extends StatelessWidget {
                       width: 16,
                       height: 16,
                       decoration: BoxDecoration(
-                        color: entry.value,
+                        color: Colors
+                            .primaries[colorindex++ % Colors.primaries.length],
                         shape: BoxShape.circle,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      entry.key, // The category name!
+                      HiveService()
+                          .getAccount(entry.key)!
+                          .name, // The category name!
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black87,
@@ -53,7 +60,7 @@ class pie_chart_widget extends StatelessWidget {
                   ],
                 ),
               );
-            }), // Note: Removed the curly braces after the arrow!
+            }),
           ],
         ),
       ],
@@ -61,26 +68,27 @@ class pie_chart_widget extends StatelessWidget {
   }
 
   Iterable<PieChartSectionData> buildSections() {
-    final spendingPerCategoryMap = HiveService().getTotalSpendingByCategory();
-    final categories = spendingPerCategoryMap.keys.toList();
+    List<PieChartSectionData> sections = [];
+    int colorindex = 0;
+    accountSpendings.forEach((account, amount) {
+      Color color = Colors.primaries[colorindex++ % Colors.primaries.length];
+      sections.add(
+        PieChartSectionData(
+          titlePositionPercentageOffset: 0.8,
+          value: amount,
+          title: HiveService().getAccount(account)!.name,
+          titleStyle: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
 
-    return categories.map((category) {
-      final spending = spendingPerCategoryMap[category] ?? 0;
-      categoryColors[category] = Colors
-          .primaries[categories.indexOf(category) % Colors.primaries.length];
-
-      return PieChartSectionData(
-        title: "${spending.toStringAsFixed(2)}€",
-        value: spending,
-        titleStyle: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-          backgroundColor: Colors.white70,
+            backgroundColor: Colors.white70,
+          ),
+          color: color,
+          radius: 50,
         ),
-        color: Colors
-            .primaries[categories.indexOf(category) % Colors.primaries.length],
       );
     });
+    return sections;
   }
 }

@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:FiTrack/models/Account.dart";
 import "package:FiTrack/models/Transaction.dart";
 import "package:FiTrack/screens/StatisticsScreen.dart";
@@ -5,7 +7,6 @@ import "package:FiTrack/screens/TransactionsScreen.dart";
 import "package:FiTrack/services/HiveService.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:hive_flutter/hive_flutter.dart";
 import "MainScreen.dart";
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,8 @@ class RootView extends StatefulWidget {
 
 class _RootViewState extends State<RootView> {
   int selectedPage = 0;
+
+  final PageController pageController = PageController();
 
   void addOrEditTransactionModal(Transaction? transaction) {
     if (HiveService().getAllAccounts().isEmpty) {
@@ -274,6 +277,11 @@ class _RootViewState extends State<RootView> {
         allTransactionsTap: () {
           setState(() {
             selectedPage = 1;
+            pageController.animateToPage(
+              1,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
           });
         },
         addTransactionModal: addOrEditTransactionModal,
@@ -288,7 +296,7 @@ class _RootViewState extends State<RootView> {
           return ValueListenableBuilder(
             valueListenable: HiveService().accountsListenable,
             builder: (context, value, child) {
-              return pages[selectedPage];
+              return PageView(controller: pageController, children: pages);
             },
           );
         },
@@ -298,6 +306,11 @@ class _RootViewState extends State<RootView> {
         onTap: (index) => {
           setState(() {
             selectedPage = index;
+            pageController.animateToPage(
+              index,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.fastOutSlowIn,
+            );
           }),
         },
         currentIndex: selectedPage,
