@@ -20,10 +20,12 @@ class HiveService {
   }
 
   void deleteAccount(Account account) {
-    final Iterable<Transaction> toBeRemoved = _transactionsBox.values.where(
-      (element) => element.accountId == account.id,
-    );
-    _transactionsBox.deleteAll(toBeRemoved);
+    final List<String> keysToBeRemoved = _transactionsBox.values
+        .where((element) => element.accountId == account.id)
+        .map((element) => element.id)
+        .toList();
+        
+    _transactionsBox.deleteAll(keysToBeRemoved);
     _accountsBox.delete(account.id);
   }
 
@@ -107,7 +109,7 @@ class HiveService {
     for (var transaction in _transactionsBox.values) {
       if (transaction.type == 'outgoing') {
         categorySpendings[transaction.category] =
-            categorySpendings[transaction.category] ?? 0 + transaction.amount;
+            (categorySpendings[transaction.category] ?? 0) + transaction.amount;
       }
     }
 
