@@ -213,12 +213,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          widget.addOrEditTransactionModal(null);
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 

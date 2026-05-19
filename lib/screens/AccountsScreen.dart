@@ -3,6 +3,8 @@ import 'package:FiTrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+final TextEditingController nameController = TextEditingController();
+
 class AccountsScreen extends StatefulWidget {
   const AccountsScreen({super.key});
 
@@ -261,8 +263,6 @@ class _AccountsScreenState extends State<AccountsScreen> {
       },
     );
   }
-
-  final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

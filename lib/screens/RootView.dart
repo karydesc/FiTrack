@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:FiTrack/models/Account.dart";
 import "package:FiTrack/models/Transaction.dart";
 import "package:FiTrack/screens/StatisticsScreen.dart";
@@ -266,6 +264,85 @@ class _RootViewState extends State<RootView> {
     );
   }
 
+  void showAddAccountModal() {
+    final TextEditingController nameController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(
+              context,
+            ).viewInsets.bottom, // Keyboard padding
+            left: 24,
+            right: 24,
+            top: 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "New Account",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: "Name"),
+              ),
+
+              const SizedBox(height: 24),
+              SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    final newAccount = Account(
+                      id: DateTime.now().millisecondsSinceEpoch
+                          .toString(), // random ID
+                      name: nameController.text,
+                    );
+                    if (nameController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Account name cannot be empty."),
+                        ),
+                      );
+                      return;
+                    }
+                    if (HiveService().accountNameExists(newAccount.name)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Account name already exists."),
+                        ),
+                      );
+                      return;
+                    }
+                    HiveService().addAccount(newAccount);
+                    nameController.clear();
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    "Save",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -296,10 +373,30 @@ class _RootViewState extends State<RootView> {
           return ValueListenableBuilder(
             valueListenable: HiveService().accountsListenable,
             builder: (context, value, child) {
-              return PageView(controller: pageController, children: pages);
+              return PageView(
+                controller: pageController,
+                children: pages,
+                onPageChanged: (value) => setState(() {
+                  selectedPage = value;
+                }),
+              );
             },
           );
         },
+      ),
+      floatingActionButton: Visibility(
+        maintainAnimation: true,
+        visible: selectedPage != 2,
+        child: FloatingActionButton(
+          onPressed: () {
+            if (selectedPage == 0) {
+              addOrEditTransactionModal(null);
+            } else if (selectedPage == 1) {
+              addOrEditTransactionModal(null);
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: Theme.of(context).primaryColor,

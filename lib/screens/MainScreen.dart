@@ -32,63 +32,65 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ValueListenableBuilder(
-        valueListenable: HiveService().transactionsListenable,
-        builder: (context, Box<Transaction> box, child) {
-          double currentMoney = HiveService().getTotalBalance();
+        valueListenable: HiveService().accountsListenable,
+        builder: (context, value, child) {
+          return ValueListenableBuilder(
+            valueListenable: HiveService().transactionsListenable,
+            builder: (context, Box<Transaction> box, child) {
+              double currentMoney = HiveService().getTotalBalance();
 
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Theme.of(context).primaryColor, Colors.white],
-              ),
-            ),
-            child: Center(
-              child: Column(
-                children: [
-                  Spacer(flex: 1),
-                  TotalBalanceWidget(money: currentMoney),
-                  ElevatedButton(
-                    child: Text("Accounts", textAlign: TextAlign.center),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AccountsScreen(),
-                        ),
-                      );
-                    },
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Theme.of(context).primaryColor, Colors.white],
                   ),
-                  const SizedBox(height: 18),
-                  RecentTransactionsWidget(
-                    transactions: HiveService().getAllTransactions().toList(),
-                    onItemTap: (Transaction transaction, BuildContext context) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => SingleTransactionScreen(
-                            context: context,
-                            transaction: transaction,
-                            addOrEditTransactionModal:
-                                widget.addTransactionModal,
-                          ),
-                        ),
-                      );
-                    },
-                    goToHistory: widget.allTransactionsTap,
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Spacer(flex: 1),
+                      TotalBalanceWidget(money: currentMoney),
+                      ElevatedButton(
+                        child: Text("Accounts", textAlign: TextAlign.center),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AccountsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 18),
+                      RecentTransactionsWidget(
+                        transactions: HiveService()
+                            .getAllTransactions()
+                            .toList(),
+                        onItemTap:
+                            (Transaction transaction, BuildContext context) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (context) => SingleTransactionScreen(
+                                    context: context,
+                                    transaction: transaction,
+                                    addOrEditTransactionModal:
+                                        widget.addTransactionModal,
+                                  ),
+                                ),
+                              );
+                            },
+                        goToHistory: widget.allTransactionsTap,
+                      ),
+                      Spacer(flex: 10),
+                    ],
                   ),
-                  Spacer(flex: 10),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          widget.addTransactionModal(null);
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }
