@@ -385,7 +385,6 @@ class _RootViewState extends State<RootView> {
         },
       ),
       floatingActionButton: Visibility(
-        maintainAnimation: true,
         visible: selectedPage != 2,
         child: FloatingActionButton(
           onPressed: () {
