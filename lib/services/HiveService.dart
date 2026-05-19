@@ -1,7 +1,6 @@
 import 'package:FiTrack/models/Account.dart';
 import 'package:FiTrack/models/Transaction.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveService {

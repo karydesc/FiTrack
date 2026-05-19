@@ -1,7 +1,6 @@
 import 'package:FiTrack/services/HiveService.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class pie_chart_widget_account extends StatelessWidget {
   const pie_chart_widget_account({super.key});
