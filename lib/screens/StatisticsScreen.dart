@@ -1,6 +1,6 @@
-import 'package:FiTrack/services/HiveService.dart';
-import 'package:FiTrack/widgets/pie_chart_widget%20_account.dart';
-import 'package:FiTrack/widgets/pie_chart_widget_category.dart';
+import 'package:fitrack/services/HiveService.dart';
+import 'package:fitrack/widgets/pie_chart_widget%20_account.dart';
+import 'package:fitrack/widgets/pie_chart_widget_category.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

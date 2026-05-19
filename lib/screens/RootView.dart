@@ -1,8 +1,8 @@
-import "package:FiTrack/models/Account.dart";
-import "package:FiTrack/models/Transaction.dart";
-import "package:FiTrack/screens/StatisticsScreen.dart";
-import "package:FiTrack/screens/TransactionsScreen.dart";
-import "package:FiTrack/services/HiveService.dart";
+import "package:fitrack/models/Account.dart";
+import "package:fitrack/models/Transaction.dart";
+import "package:fitrack/screens/StatisticsScreen.dart";
+import "package:fitrack/screens/TransactionsScreen.dart";
+import "package:fitrack/services/HiveService.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "MainScreen.dart";
@@ -347,7 +347,7 @@ class _RootViewState extends State<RootView> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setApplicationSwitcherDescription(
-      ApplicationSwitcherDescription(label: "FiTrack"),
+      ApplicationSwitcherDescription(label: "fitrack"),
     );
     final pages = [
       MainScreen(

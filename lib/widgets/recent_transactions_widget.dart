@@ -1,4 +1,4 @@
-import 'package:FiTrack/models/Transaction.dart';
+import 'package:fitrack/models/Transaction.dart';
 import 'package:flutter/material.dart';
 import 'list_item.dart';
 

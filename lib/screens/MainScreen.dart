@@ -1,9 +1,9 @@
-import 'package:FiTrack/models/Transaction.dart';
-import 'package:FiTrack/screens/AccountsScreen.dart';
-import 'package:FiTrack/screens/SingleTransactionScreen.dart';
-import 'package:FiTrack/services/HiveService.dart';
-import 'package:FiTrack/widgets/recent_transactions_widget.dart';
-import 'package:FiTrack/widgets/total_balance_widget.dart';
+import 'package:fitrack/models/Transaction.dart';
+import 'package:fitrack/screens/AccountsScreen.dart';
+import 'package:fitrack/screens/SingleTransactionScreen.dart';
+import 'package:fitrack/services/HiveService.dart';
+import 'package:fitrack/widgets/recent_transactions_widget.dart';
+import 'package:fitrack/widgets/total_balance_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("FiTrack", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("fitrack", style: TextStyle(fontWeight: FontWeight.bold)),
         titleTextStyle: TextStyle(fontSize: 30),
         centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,

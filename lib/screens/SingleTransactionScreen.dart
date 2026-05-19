@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:FiTrack/models/Transaction.dart';
-import 'package:FiTrack/services/HiveService.dart';
+import 'package:fitrack/models/Transaction.dart';
+import 'package:fitrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

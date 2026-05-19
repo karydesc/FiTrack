@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:FiTrack/models/Account.dart';
-import 'package:FiTrack/models/Transaction.dart';
-import 'package:FiTrack/screens/RootView.dart';
-import 'package:FiTrack/services/HiveService.dart';
+import 'package:fitrack/models/Account.dart';
+import 'package:fitrack/models/Transaction.dart';
+import 'package:fitrack/screens/RootView.dart';
+import 'package:fitrack/services/HiveService.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

@@ -1,5 +1,5 @@
-import 'package:FiTrack/models/Account.dart';
-import 'package:FiTrack/models/Transaction.dart';
+import 'package:fitrack/models/Account.dart';
+import 'package:fitrack/models/Transaction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -23,7 +23,7 @@ class HiveService {
         .where((element) => element.accountId == account.id)
         .map((element) => element.id)
         .toList();
-        
+
     _transactionsBox.deleteAll(keysToBeRemoved);
     _accountsBox.delete(account.id);
   }

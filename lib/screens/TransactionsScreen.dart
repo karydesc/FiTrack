@@ -1,8 +1,8 @@
-import 'package:FiTrack/models/Account.dart';
-import 'package:FiTrack/models/Transaction.dart';
-import 'package:FiTrack/screens/SingleTransactionScreen.dart';
-import 'package:FiTrack/services/HiveService.dart';
-import 'package:FiTrack/widgets/list_item.dart';
+import 'package:fitrack/models/Account.dart';
+import 'package:fitrack/models/Transaction.dart';
+import 'package:fitrack/screens/SingleTransactionScreen.dart';
+import 'package:fitrack/services/HiveService.dart';
+import 'package:fitrack/widgets/list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
