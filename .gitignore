@@ -9,7 +9,7 @@
 .idea/
 *.iml
 *.iws
-
+test/
 
 # Flutter repo-specific
 /bin/cache/
@@ -42,6 +42,8 @@ analysis_benchmark.json
 .packages
 .pub-preload-cache/
 .pub/
+ios/
+android/
 build/
 flutter_*.png
 linked_*.ds
