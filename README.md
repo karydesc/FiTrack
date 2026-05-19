@@ -1,3 +1,3 @@
 # FiTrack
 
-A Flutter project.
+An app that helps you organize and manage your financials
