@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("fitrack", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("FiTrack", style: TextStyle(fontWeight: FontWeight.bold)),
         titleTextStyle: TextStyle(fontSize: 30),
         centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,

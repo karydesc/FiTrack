@@ -1,4 +1,4 @@
-package com.chris.fitrack.fitrack
+package com.karydesc.fitrack.fitrack
 
 import io.flutter.embedding.android.FlutterActivity
 
