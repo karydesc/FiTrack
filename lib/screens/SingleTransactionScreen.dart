@@ -53,7 +53,10 @@ class SingleTransactionScreen extends StatelessWidget {
             ],
           ),
         ],
-        title: const Text("Transaction Details"),
+        title: const Text(
+          "Transaction Details",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         titleTextStyle: const TextStyle(fontSize: 24),
         centerTitle: false,
         backgroundColor: Theme.of(context).primaryColor,
@@ -118,7 +121,6 @@ class SingleTransactionScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-
                           Text(
                             "${isOutgoing ? '-' : '+'}${liveTransaction.getAmount().toStringAsFixed(2)} €",
                             style: TextStyle(
@@ -131,7 +133,6 @@ class SingleTransactionScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-
                           Text(
                             liveTransaction.text,
                             style: const TextStyle(
@@ -141,11 +142,9 @@ class SingleTransactionScreen extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
-
                           const SizedBox(height: 32),
                           Divider(color: Colors.grey.shade200, thickness: 1.5),
                           const SizedBox(height: 24),
-
                           _buildDetailRow(
                             Icons.category_outlined,
                             "Category",
